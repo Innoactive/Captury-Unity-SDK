@@ -68,5 +68,11 @@ namespace Captury
         /// Distance threshold (in meter) for user assignment with AR Tag
         /// </summary>
         public float arTagSkeletonThreshold;
+
+        /// <summary>
+        /// Smoothing factor for positonal tracking improvement with AR Tags
+        /// Higher value means more impact of the AR Tag position
+        /// </summary>
+        public float arTagPositonSmoothingFactor;
     }
 }
