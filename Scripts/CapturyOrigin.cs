@@ -10,7 +10,7 @@ namespace Captury
     public class CapturyOrigin : MonoBehaviour
     {
         /// <summary>
-        /// Offset between this CapturyOrigin and the world origin (0,0,0)
+        /// Offset between this CapturyOrigin and the world origin (0,0,0).
         /// </summary>
         public Vector3 OffsetToWorldOrigin
         {
@@ -20,6 +20,9 @@ namespace Captury
             }
         }
 
+        /// <summary>
+        /// Rotation offset between this CapturyOrigin and the world rotation.
+        /// </summary>
         public Quaternion RotationOffsetToWorldRotation
         {
             get
