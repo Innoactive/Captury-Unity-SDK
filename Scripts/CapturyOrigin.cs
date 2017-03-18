@@ -19,5 +19,13 @@ namespace Captury
                 return transform.position;
             }
         }
+
+        public Quaternion RotationOffsetToWorldRotation
+        {
+            get
+            {
+                return transform.rotation;
+            }
+        }
     }
 }
