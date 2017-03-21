@@ -416,7 +416,7 @@ namespace Captury
                     arTags[num] = new ARTag();
                     arTags[num].id = arTag.id;
                     arTags[num].translation = ConvertPosition(new Vector3(arTag.ox, arTag.oy, arTag.oz)) + offsetToOrigin;
-                    arTags[num].rotation = ConvertRotation(Quaternion.LookRotation(new Vector3(arTag.nx, arTag.ny, arTag.nz)).eulerAngles);
+                    arTags[num].rotation = ConvertRotation(Quaternion.LookRotation(new Vector3(-arTag.nx, -arTag.ny, -arTag.nz)).eulerAngles);
                     at = new IntPtr(at.ToInt64() + Marshal.SizeOf(typeof(CapturyARTag)));
                 }
                 if (num != 0 && ARTagsDetected != null)
