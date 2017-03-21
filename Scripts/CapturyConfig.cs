@@ -14,14 +14,29 @@ namespace Captury
             public int id;
 
             /// <summary>
-            /// offsets from head to AR Tag
+            /// position offset from head to AR Tag
             /// </summary>
             public float offsetPosX;
             public float offsetPosY;
             public float offsetPosZ;
+
+            /// <summary>
+            /// rotation offset from head to AR Tag
+            /// </summary>
             public float offsetRotX;
             public float offsetRotY;
             public float offsetRotZ;
+
+            // just for test merge with upper
+            /// <summary>
+            /// y rotation of the AR Tag when headset points forward
+            /// </summary>
+            public float offsetHeadsetRotY;
+
+            public HeadsetARTag(int id)
+            {
+                this.id = id;
+            }
         }
 
         /// <summary>
