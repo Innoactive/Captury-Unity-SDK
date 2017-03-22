@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Captury
@@ -58,7 +56,10 @@ namespace Captury
                 capturyOrigin = CreateCapturyOrigin();
             }
 
-            CapturyOriginChanged(capturyOrigin);
+            if(CapturyOriginChanged != null)
+            {
+                CapturyOriginChanged(capturyOrigin);
+            }
         }
 
         /// <summary>
