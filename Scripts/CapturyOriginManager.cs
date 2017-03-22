@@ -6,6 +6,7 @@ namespace Captury
     /// <summary>
     /// Manages the <see cref="CapturyOrigin"/> whithin a scene which defines the origin of the coordinate system of all avatars 
     /// </summary>
+    [RequireComponent(typeof(CapturyNetworkPlugin))]
     public class CapturyOriginManager : MonoBehaviour
     {
         /// <summary>
@@ -20,9 +21,16 @@ namespace Captury
         /// </summary>
         private CapturyOrigin capturyOrigin;
 
+        /// <summary>
+        /// Network plugin
+        /// </summary>
+        private CapturyNetworkPlugin networkPlugin;
+
         // Use this for initialization
         void Start()
         {
+            networkPlugin = GetComponent<CapturyNetworkPlugin>();
+
             // find CapturyOrigin to define spawn position of avatars
             capturyOrigin = FindObjectOfType<CapturyOrigin>();
             if (capturyOrigin == null)
