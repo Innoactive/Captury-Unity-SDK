@@ -85,9 +85,20 @@ namespace Captury
         public float arTagSkeletonThreshold;
 
         /// <summary>
-        /// Smoothing factor for positonal tracking improvement with AR Tags
-        /// Higher value means more impact of the AR Tag position
+        /// Smoothing factor for the head positon
+        /// Higher value means faster camera movement but more jittering
         /// </summary>
-        public float arTagPositonSmoothingFactor;
+        public float headPositionSmoothing;
+
+        /// <summary>
+        /// Smoothing factor for the rotational drift correction with AR tags
+        /// Higher value means higher impact of the AR tag
+        /// </summary>
+        public float yRotDriftCorrectionSmoothing;
+
+        /// <summary>
+        /// The number of frames which should be considered for AR Tag tracking improvement
+        /// </summary>
+        public int maxARTagSamples;
     }
 }
