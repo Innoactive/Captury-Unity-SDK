@@ -100,5 +100,12 @@ namespace Captury
         /// The number of frames which should be considered for AR Tag tracking improvement
         /// </summary>
         public int maxARTagSamples;
+
+        /// <summary>
+        /// Offset from head to center eye
+        /// </summary>
+        public float headToCenterEyeOffsetX;
+        public float headToCenterEyeOffsetY;
+        public float headToCenterEyeOffsetZ;
     }
 }
