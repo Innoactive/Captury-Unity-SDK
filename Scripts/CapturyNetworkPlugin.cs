@@ -756,7 +756,7 @@ namespace Captury
         //========================================================================================================
         // Helper function to convert a position from a right-handed to left-handed coordinate system (both Y-up)
         //========================================================================================================
-        private Vector3 ConvertPosition(Vector3 position)
+        public Vector3 ConvertPosition(Vector3 position)
         {
             position.x *= -config.scaleFactor;
             position.y *= config.scaleFactor;
