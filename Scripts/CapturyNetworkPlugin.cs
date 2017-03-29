@@ -28,6 +28,8 @@ namespace Captury
         public int id;
         public int numJoints;
         public IntPtr joints;
+        public int numBlobs;
+        public IntPtr blobs;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -126,11 +128,13 @@ namespace Captury
         public IntPtr retargetTarget = IntPtr.Zero;
 
         private GameObject reference;
+        public bool upToDate = true;
         public GameObject mesh // reference to game object that is animated
         {
             get { return reference; }
             set
             {
+                upToDate = false;
                 reference = value;
                 if (reference == null)
                 {
@@ -359,14 +363,32 @@ namespace Captury
                     CapturyPose pose;
                     if (skeletons[actorID].retargetTarget != IntPtr.Zero)
                     {
+                        CapturyPose posex = (CapturyPose)Marshal.PtrToStructure(poseData, typeof(CapturyPose));
+                        float[] valuex = new float[posex.numValues * 6];
+                        Marshal.Copy(posex.values, valuex, 0, posex.numValues * 6);
+                        Debug.Log("pose = " + String.Join(", ", new List<float>(valuex).ConvertAll(i => i.ToString()).ToArray()));
+
+                        if (!skeletons[actorID].upToDate)
+                        {
+                            CapturyActor actor = (CapturyActor)Marshal.PtrToStructure(skeletons[actorID].retargetTarget, typeof(CapturyActor));
+                            CapturySkeleton skel = skeletons[actorID];
+                            IntPtr rawData = skel.rawData;
+                            ConvertActor(actor, skeletons[actorID].retargetTarget, ref skel);
+                            skel.rawData = rawData;
+                            skeletons[actorID] = skel;
+                            skeletons[actorID].mesh = skeletons[actorID].mesh;
+                            skeletons[actorID].upToDate = true;
+                        }
+
                         IntPtr retargetedPose = liveRetarget(skeletons[actorID].rawData, skeletons[actorID].retargetTarget, poseData);
                         pose = (CapturyPose)Marshal.PtrToStructure(retargetedPose, typeof(CapturyPose));
                     } else
                         pose = (CapturyPose)Marshal.PtrToStructure(poseData, typeof(CapturyPose));
 
-                    // get the data into a float array
+                    // copy the data into a float array
                     float[] values = new float[pose.numValues * 6];
                     Marshal.Copy(pose.values, values, 0, pose.numValues * 6);
+                    Debug.Log("retargeted = " + String.Join(", ", new List<float>(values).ConvertAll(i => i.ToString()).ToArray()));
 
                     // now loop over all joints
                     Vector3 pos = new Vector3();
@@ -491,7 +513,7 @@ namespace Captury
                         Debug.Log(String.Format("Received {0} actors", numActors));
 
                         // create actor struct
-                        int szStruct = Marshal.SizeOf(typeof(CapturyActor)) + 16; // implicit padding
+                        int szStruct = Marshal.SizeOf(typeof(CapturyActor))+4; // implicit padding
                         for (uint i = 0; i < numActors; i++)
                         {
                             // get an actor
@@ -697,7 +719,7 @@ namespace Captury
         //===============================================
         // helper function to map an actor to a skeleton
         //===============================================
-        private void ConvertActor(CapturyActor actor, IntPtr actorData, ref CapturySkeleton skel)
+        public void ConvertActor(CapturyActor actor, IntPtr actorData, ref CapturySkeleton skel)
         {
             if (skel == null)
             {
@@ -725,6 +747,7 @@ namespace Captury
                 skel.joints[i].name = skel.joints[i].name.Substring(0, jpos);
                 skel.joints[i].offset.Set(joint.ox, joint.oy, joint.oz);
                 skel.joints[i].orientation.Set(joint.rx, joint.ry, joint.rz);
+                skel.joints[i].parent = joint.parent;
 
                 //Debug.Log ("Got joint " + skel.joints[i].name + " at " + joint.ox + joint.oy + joint.oz);
             }
@@ -738,6 +761,17 @@ namespace Captury
             position.x *= -config.scaleFactor;
             position.y *= config.scaleFactor;
             position.z *= config.scaleFactor;
+            return position;
+        }
+
+        //========================================================================================================
+        // Helper function to convert a position from a left-handed to right-handed coordinate system (both Y-up)
+        //========================================================================================================
+        public Vector3 ConvertPositionToLive(Vector3 position)
+        {
+            position.x /= -config.scaleFactor;
+            position.y /= config.scaleFactor;
+            position.z /= config.scaleFactor;
             return position;
         }
 
